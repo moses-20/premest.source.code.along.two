@@ -1,6 +1,7 @@
 const fs = require("fs");
 const { Router } = require("express");
 const router = Router();
+const { checkAuth, timeStamp } = require("../middlewares/users.middleware");
 
 let users = [];
 
@@ -10,11 +11,13 @@ fs.readFile("database.json", (err, data) => {
   users = JSON.parse(data);
 });
 
-router.get("/users", (req, res) => {
+// get all users
+router.get("/users", checkAuth, (req, res) => {
   res.status(200).json({ success: true, data: users });
 });
 
-router.get("/users/:id", (req, res) => {
+// get user by id
+router.get("/users/:id", checkAuth, (req, res) => {
   const userId = req.params.id;
 
   // use only two equal signs because the userId is a string but the actual id in the array is a number
@@ -27,7 +30,8 @@ router.get("/users/:id", (req, res) => {
   res.status(200).json({ success: true, data: user });
 });
 
-router.post("/users", (req, res) => {
+// add new user
+router.post("/users", timeStamp, (req, res) => {
   const newUser = req.body;
   users.push(newUser);
 
