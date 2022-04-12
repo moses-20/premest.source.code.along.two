@@ -1,0 +1,44 @@
+const fs = require("fs");
+const { Router } = require("express");
+const { byCategory, byAuthor } = require("./handlers/books.handlers");
+const router = Router();
+
+let books = [];
+
+fs.readFile("books.json", (err, data) => {
+  if (err) throw err;
+
+  books = JSON.parse(data);
+});
+
+// adding middlewares to filter books by category or by author
+router.get("/books", [byCategory, byAuthor], (req, res) => {
+  res.status(200).json({ success: true, data: books });
+});
+
+router.post("/books", (req, res) => {
+  const book = req.body;
+  books.push(book);
+
+  let data = JSON.stringify(books);
+  fs.writeFileSync("books.json", data);
+
+  res.status(200).json({ success: true, data: books });
+});
+
+// update book details by isbn [international standard book number]
+router.put("/books", (req, res) => {
+  const isbn = req.query.isbn;
+  const data = req.body;
+
+  let book = books.filter((b) => b.isbn == isbn);
+  let _book = { ...book[0], ...data };
+
+  books = books.map((b) => (b.isbn == isbn ? _book : b));
+
+  fs.writeFileSync("books.json", JSON.stringify(books));
+
+  res.status(200).json({ books });
+});
+
+module.exports = router;

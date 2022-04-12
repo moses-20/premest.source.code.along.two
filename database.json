@@ -1,1 +1,6 @@
-[{"id":1,"name":"Gbemu Terra"},{"id":2,"name":"Yamah Knoorls"},{"id":3,"name":"Kri Santos"},{"id":4,"name":"Moses Gameli"}]
+[
+  { "id": 1, "name": "Gbemu Terra" },
+  { "id": 2, "name": "Yamah Knoorls" },
+  { "id": 3, "name": "Kri Santos" },
+  { "id": 4, "name": "Moses Gameli" }
+]

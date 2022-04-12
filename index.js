@@ -3,10 +3,12 @@ const express = require("express");
 
 const app = express();
 const userRoute = require("./routes/user");
+const booksRoute = require("./routes/books");
 
 app.use(express.json());
 
 app.use(userRoute);
+app.use(booksRoute);
 
 app.get("/", (req, res) => {
   res.sendFile(path.join(__dirname + "/pages/index.html"));
