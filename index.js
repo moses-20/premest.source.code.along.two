@@ -1,10 +1,18 @@
 const path = require("path");
 const express = require("express");
+const cors = require("cors");
 
 const app = express();
 const userRoute = require("./routes/user");
 const booksRoute = require("./routes/books");
 
+const corsOptions = {
+  origin: true,
+  credentials: true,
+  optionsSuccessStatus: 204
+};
+
+app.use(cors(corsOptions));
 app.use(express.json());
 
 app.use(userRoute);
