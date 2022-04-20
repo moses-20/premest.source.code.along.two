@@ -1,5 +1,7 @@
+require("dotenv").config();
 const path = require("path");
 const express = require("express");
+const mongoose = require("mongoose");
 const cors = require("cors");
 
 const app = express();
@@ -11,6 +13,12 @@ const corsOptions = {
   credentials: true,
   optionsSuccessStatus: 204
 };
+
+mongoose.connect(process.env.DBURL, () => {
+  app.listen(4000, () => {
+    console.log("SERVER UP & DATABASE CONNECTED");
+  });
+});
 
 app.use(cors(corsOptions));
 app.use(express.json());
@@ -24,8 +32,4 @@ app.get("/", (req, res) => {
 
 app.get("/*", (req, res) => {
   res.status(400).sendFile(path.join(__dirname + "/pages/404.html"));
-});
-
-app.listen(4000, () => {
-  console.log("SERVER IS UP!");
 });

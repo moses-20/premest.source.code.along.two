@@ -44,6 +44,4 @@ userMiddlewares.timeStamp = (req, res, next) => {
   next();
 };
 
-let today = new Date().toLocaleTimeString();
-
 module.exports = userMiddlewares;
