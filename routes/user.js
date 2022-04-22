@@ -3,6 +3,7 @@ const { Router } = require("express");
 const router = Router();
 const { timeStamp } = require("../middlewares/users.middleware");
 const User = require("../models/user.model");
+const { handleErrors } = require("./handlers/user.handler");
 
 // get all users
 router.get("/users", async function (req, res) {
@@ -43,11 +44,7 @@ router.post("/users", timeStamp, async function (req, res) {
       }
     });
   } catch (error) {
-    let message = error;
-
-    if (error.code === 11000) {
-      body = "username already exists";
-    }
+    let message = handleErrors(error);
 
     res.status(400).json({ success: false, body: message });
   }

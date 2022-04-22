@@ -6,9 +6,16 @@ const bcrypt = require("bcrypt");
 const userSchema = new mongoose.Schema({
   username: {
     type: String,
-    unique: true
+    required: [true, "please enter a user name"],
+    minlength: [6, "minimum username length is 6 characters"],
+    unique: true,
+    lowercase: true
   },
-  password: String
+  password: {
+    type: String,
+    required: [true, "you need to choose a password"],
+    minlength: [6, "minimum password length is 6 characters"]
+  }
 });
 
 // encrypt password before saving new user info
