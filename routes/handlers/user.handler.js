@@ -1,3 +1,5 @@
+const jwt = require("jsonwebtoken");
+
 const userHandler = {};
 
 userHandler.handleErrors = (error) => {
@@ -21,6 +23,14 @@ userHandler.handleErrors = (error) => {
   }
 
   return errorData;
+};
+
+// creating a bearer token
+userHandler.createToken = (id) => {
+  const maxAge = 24 * 60 * 60;
+  return jwt.sign({ id }, process.env.SECRET, {
+    expiresIn: maxAge
+  });
 };
 
 module.exports = userHandler;

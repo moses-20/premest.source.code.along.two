@@ -1,9 +1,8 @@
-const fs = require("fs");
 const { Router } = require("express");
 const router = Router();
 const { timeStamp } = require("../middlewares/users.middleware");
 const User = require("../models/user.model");
-const { handleErrors } = require("./handlers/user.handler");
+const { handleErrors, createToken } = require("./handlers/user.handler");
 
 // get all users
 router.get("/users", async function (req, res) {
@@ -29,7 +28,7 @@ router.get("/users/:id", async function (req, res) {
 });
 
 // add new user
-router.post("/users", timeStamp, async function (req, res) {
+router.post("/users/signup", timeStamp, async function (req, res) {
   const { username, password } = req.body;
 
   try {
@@ -46,6 +45,37 @@ router.post("/users", timeStamp, async function (req, res) {
   } catch (error) {
     let message = handleErrors(error);
 
+    res.status(400).json({ success: false, body: message });
+  }
+});
+
+// login user
+router.post("/users/login", async function (req, res, next) {
+  const { username, password } = req.body;
+
+  try {
+    let result = await User.login(username, password, next);
+
+    if (result.auth) {
+      let token = createToken(result.data._id);
+
+      res.cookie("jwt", token, { httpOnly: true, maxAge: 24 * 60 * 60 * 1000 });
+      res.status(201).json({
+        success: true,
+        message: "login successful",
+        body: {
+          username: result.data.username
+        }
+      });
+
+      return;
+    }
+
+    res
+      .status(400)
+      .json({ success: false, message: "incorrect username or password" });
+  } catch (error) {
+    let message = handleErrors(error);
     res.status(400).json({ success: false, body: message });
   }
 });
