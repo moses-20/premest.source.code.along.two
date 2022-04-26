@@ -50,11 +50,11 @@ router.post("/users/signup", timeStamp, async function (req, res) {
 });
 
 // login user
-router.post("/users/login", async function (req, res, next) {
+router.post("/users/login", async function (req, res) {
   const { username, password } = req.body;
 
   try {
-    let result = await User.login(username, password, next);
+    let result = await User.login(username, password);
 
     if (result.auth) {
       let token = createToken(result.data._id);
